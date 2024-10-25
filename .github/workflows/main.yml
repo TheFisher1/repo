@@ -16,3 +16,18 @@ jobs:
         with: 
           name: code
           path: .
+  Linter:
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps: 
+      - name: Download
+        uses: actions/download-artifact@v4
+        with:
+          name: code
+          path: .
+      - name: Linter
+        run: super-linter/super-linter/slim
+        env: 
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
