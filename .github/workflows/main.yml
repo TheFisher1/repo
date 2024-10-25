@@ -26,7 +26,7 @@ jobs:
           name: code
           path: .
       - name: Linter
-        run: super-linter/super-linter/slim
+        run: super-linter/super-linter/slim@v5 
         env: 
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
