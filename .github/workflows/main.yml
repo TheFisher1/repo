@@ -42,7 +42,7 @@ jobs:
         with:
           name: code
           path: .
-      - name: Linter
+      - name: run linting
         run: super-linter/super-linter/slim@v5 
         env: 
           DEFAULT_BRANCH: main
