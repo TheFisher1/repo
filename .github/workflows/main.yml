@@ -65,7 +65,7 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
     - name: Build with Gradle
-      run: chmod +x ../ci/build-app.sh && ../ci/build-app.sh
+      run: chmod +x ../../ci/build-app.sh && ../../ci/build-app.sh
     - name: Upload Repo
       uses: actions/upload-artifact@v3
       with:
