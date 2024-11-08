@@ -36,4 +36,70 @@ jobs:
   Test:
     runs-on: ubuntu-latest
     needs: Clone-down
-    container: gra
+    container: gradle:6-jdk11
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+    - name: Test with Gradle
+      run: ci/unit-test-app.sh
+  Build:
+    runs-on: ubuntu-latest
+    needs: Clone-down
+    container: gradle:6-jdk11
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+    - name: Build with Gradle
+      run: ci/build-app.sh
+    - name: Upload Repo
+      uses: actions/upload-artifact@v3
+      with:
+        name: code
+        path: .
+
+  Docker-image:
+    runs-on: ubuntu-latest
+    needs: [Build,Test]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+    - name: build docker
+      run: ci/build-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/build-docker.sh
+    - name: push docker
+      run: ci/push-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/push-docker.sh
+  Component-test:
+    runs-on: ubuntu-latest
+    needs: Docker-image
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+    - name: Execute component test
+      run: ci/component-test.sh && GIT_COMMIT="GA-$GITHUB_SHA"
