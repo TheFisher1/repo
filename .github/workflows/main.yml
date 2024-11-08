@@ -75,8 +75,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [Build,Test]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
     - name: Cache Gradle packages
       uses: actions/cache@v3
       with:
@@ -92,6 +90,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: Docker-image
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
     - name: Cache Gradle packages
       uses: actions/cache@v3
       with:
