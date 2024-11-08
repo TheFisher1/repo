@@ -20,18 +20,18 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-  Sonar-Cloud:
-    name: Sonar Cloud check
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
-    container: gradle:6-jdk11
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   Test:
     runs-on: ubuntu-latest
@@ -45,7 +45,8 @@ jobs:
           ~/.gradle/caches
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        
+    - name: Test with Gradle
+      run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
   Build:
     runs-on: ubuntu-latest
     needs: Clone-down
@@ -58,6 +59,8 @@ jobs:
           ~/.gradle/caches
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+    - name: Build with Gradle
+      run: chmod +x ci/build-app.sh && ci/build-app.sh
     - name: Upload Repo
       uses: actions/upload-artifact@v3
       with:
