@@ -43,9 +43,23 @@ jobs:
         with:
           name: code
           path: .
-
+  
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+  Sonar-Cloud:
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+       fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      
+
     
 
