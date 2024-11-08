@@ -33,7 +33,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
     - name: Run SonarCloud analysis
-      uses: sonarcloud/sonarcloud-github-action@master
+      uses: sonarsource/sonarcloud-github-action@master
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
