@@ -91,7 +91,7 @@ jobs:
     - name: Login and Push
       env:
         CR_PAT: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_USER: ${{ github.repository_owner }}
+        GITHUB_USER: ${{ github.actor }}
       run: |
         echo $CR_PAT | docker login ghcr.io -u $GITHUB_USER --password-stdin
         docker images
