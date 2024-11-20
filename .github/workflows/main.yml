@@ -96,8 +96,8 @@ jobs:
         LOWERCASE_USER=$(echo "$GITHUB_USER" | tr '[:upper:]' '[:lower:]')
         echo $CR_PAT | docker login ghcr.io -u $GITHUB_USER --password-stdin
         # Retag images with lowercase
-        docker tag ghcr.io/$GITHUB_USER/micronaut-app:latest ghcr.io/$LOWERCASE_USER/micronaut-app:latest
-        docker tag ghcr.io/$GITHUB_USER/micronaut-app:1.0-GA-${GITHUB_SHA::8} ghcr.io/$LOWERCASE_USER/micronaut-app:1.0-GA-${GITHUB_SHA::8}
+        # docker tag ghcr.io/$GITHUB_USER/micronaut-app:latest ghcr.io/$LOWERCASE_USER/micronaut-app:latest
+        # docker tag ghcr.io/$GITHUB_USER/micronaut-app:1.0-GA-${GITHUB_SHA::8} ghcr.io/$LOWERCASE_USER/micronaut-app:1.0-GA-${GITHUB_SHA::8}
         # Push with lowercase
         docker push ghcr.io/$LOWERCASE_USER/micronaut-app:latest
         docker push ghcr.io/$LOWERCASE_USER/micronaut-app:1.0-GA-${GITHUB_SHA::8}
