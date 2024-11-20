@@ -81,8 +81,12 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: code
-    - name: Login to Docker
-      run: echo "${{ env.docker_password }}" | docker login -u ${{ env.docker_username }} --password-stdin
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: build docker
       run: ci/build-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/build-docker.sh
     - name: push docker
