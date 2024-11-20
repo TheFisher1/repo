@@ -91,8 +91,13 @@ jobs:
     - name: Login and Push
       env:
         CR_PAT: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_USER: ${{ github.repository_owner }}
       run: |
-        echo $CR_PAT | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+        echo $CR_PAT | docker login ghcr.io -u $GITHUB_USER --password-stdin
+        docker images
+        # Try pushing directly to test
+        docker push ghcr.io/$GITHUB_USER/micronaut-app:latest
+        # Then try the script
         ci/push-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/push-docker.sh
   Component-test:
     runs-on: ubuntu-latest
