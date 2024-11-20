@@ -78,29 +78,24 @@ jobs:
 
   Docker-image:
     runs-on: ubuntu-latest
-    needs: [Build,Test]
+    needs: [Build]
+    permissions:
+      packages: write
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Download artifacts
-      uses: actions/download-artifact@v3
+    - name: Download code
+      uses: actions/download-artifact@v4
       with:
         name: code
+        path: .
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
     - name: build docker
-      run: ci/build-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/build-docker.sh
-    - name: Login and Push
-      env:
-        CR_PAT: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_USER: ${{ github.actor }}
-      run: |
-        LOWERCASE_USER=$(echo "$GITHUB_USER" | tr '[:upper:]' '[:lower:]')
-        echo $CR_PAT | docker login ghcr.io -u $GITHUB_USER --password-stdin
-        # Retag images with lowercase
-        # docker tag ghcr.io/$GITHUB_USER/micronaut-app:latest ghcr.io/$LOWERCASE_USER/micronaut-app:latest
-        # docker tag ghcr.io/$GITHUB_USER/micronaut-app:1.0-GA-${GITHUB_SHA::8} ghcr.io/$LOWERCASE_USER/micronaut-app:1.0-GA-${GITHUB_SHA::8}
-        # Push with lowercase
-        docker push ghcr.io/$LOWERCASE_USER/micronaut-app:latest
-        docker push ghcr.io/$LOWERCASE_USER/micronaut-app:1.0-GA-${GITHUB_SHA::8}
+      run: bash ci/build-docker.sh
+    - name: push docker
+      run: bash ci/push-docker.sh
   Component-test:
     runs-on: ubuntu-latest
     needs: Docker-image
