@@ -79,6 +79,9 @@ jobs:
   Docker-image:
     runs-on: ubuntu-latest
     needs: [Build]
+    permissions:
+      packages: write
+      contents: read
     steps:
     - name: Download code
       uses: actions/download-artifact@v4
@@ -90,16 +93,24 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Login to GHCR
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: build docker
       env:
         docker_username: ${{ secrets.DOCKER_USERNAME }}
         docker_password: ${{ secrets.DOCKER_PASSWORD }}
+        GITHUB_USER: ${{ github.actor }}
         GIT_COMMIT: GA-${{ github.sha }}
       run: bash ci/build-docker.sh
     - name: push docker
       env:
         docker_username: ${{ secrets.DOCKER_USERNAME }}
         docker_password: ${{ secrets.DOCKER_PASSWORD }}
+        GITHUB_USER: ${{ github.actor }}
         GIT_COMMIT: GA-${{ github.sha }}
       run: bash ci/push-docker.sh
   Component-test:
