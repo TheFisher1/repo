@@ -4,6 +4,11 @@ set -e
 # Convert username to lowercase
 LOWERCASE_USER=$(echo "$GITHUB_USER" | tr '[:upper:]' '[:lower:]')
 
+if [[ -z "${LOWERCASE_USER}" ]]; then
+  echo "GITHUB_USER is not set"
+  exit 1
+fi
+
 # Login to GHCR with PAT
 echo "$PAT" | docker login ghcr.io -u $LOWERCASE_USER --password-stdin
 
