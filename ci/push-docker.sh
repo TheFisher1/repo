@@ -5,7 +5,7 @@ set -e
 # LOWERCASE_USER=$(echo "$" | tr '[:upper:]' '[:lower:]')
 
 # Login to GHCR with PAT
-# echo "$GITHUB_TOKEN" | docker login ghcr.io -u $docker_username --password-stdin
+echo "$PAT" | docker login ghcr.io -u $docker_username --password-stdin
 
 # Show available images (for debugging)
 docker images
