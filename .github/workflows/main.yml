@@ -93,11 +93,13 @@ jobs:
     - name: build docker
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         GIT_COMMIT: GA-${{ github.sha }}
       run: bash ci/build-docker.sh
     - name: push docker
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         GIT_COMMIT: GA-${{ github.sha }}
       run: bash ci/push-docker.sh
   Component-test:
