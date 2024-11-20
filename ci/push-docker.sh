@@ -15,6 +15,6 @@ echo "$PAT" | docker login ghcr.io -u $GITHUB_USER --password-stdin
 # Show available images (for debugging)
 docker images
 
-docker push "ghcr.io/${docker_username}/micronaut-app:1.0-${GIT_COMMIT::8}" 
-docker push "ghcr.io/${docker_username}/micronaut-app:latest" &
+docker push "ghcr.io/${LOWERCASE_USER}/micronaut-app:1.0-${GIT_COMMIT::8}" 
+docker push "ghcr.io/${LOWERCASE_USER}/micronaut-app:latest" &
 wait
