@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-echo "$docker_password" | docker login ghcr.io --username "$docker_username" --password-stdin
-docker push "ghcr.io/$docker_username/micronaut-app:1.0-${GIT_COMMIT::8}" 
-docker push "ghcr.io/$docker_username/micronaut-app:latest" &
+echo "$DOCKER_PASSWORD" | docker login ghcr.io --username "$DOCKER_USERNAME" --password-stdin
+docker push "ghcr.io/$DOCKER_USERNAME/micronaut-app:1.0-${GIT_COMMIT::8}" 
+docker push "ghcr.io/$DOCKER_USERNAME/micronaut-app:latest" &
 wait
