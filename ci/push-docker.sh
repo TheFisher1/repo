@@ -2,7 +2,7 @@
 set -e
 
 # Login to Docker Hub (non-interactive mode)
-echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+echo "$docker_password" | docker login --username "$docker_username" --password-stdin
 
 # Push both tags
 docker push "$DOCKER_USERNAME/micronaut-app:1.0-${GIT_COMMIT::8}" 
