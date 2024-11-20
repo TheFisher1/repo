@@ -10,7 +10,7 @@ if [[ -z "${LOWERCASE_USER}" ]]; then
 fi
 
 # Login to GHCR with PAT
-echo "$PAT" | docker login ghcr.io -u $LOWERCASE_USER --password-stdin
+echo "$PAT" | docker login ghcr.io -u $GITHUB_USER --password-stdin
 
 # Show available images (for debugging)
 docker images
