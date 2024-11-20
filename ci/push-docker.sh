@@ -2,10 +2,10 @@
 set -e
 
 # Convert username to lowercase
-# LOWERCASE_USER=$(echo "$" | tr '[:upper:]' '[:lower:]')
+LOWERCASE_USER=$(echo "$" | tr '[:upper:]' '[:lower:]')
 
 # Login to GHCR with PAT
-echo "$PAT" | docker login ghcr.io -u $docker_username --password-stdin
+echo "$PAT" | docker login ghcr.io -u $LOWERCASE_USER --password-stdin
 
 # Show available images (for debugging)
 docker images
