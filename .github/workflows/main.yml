@@ -86,19 +86,14 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: code
-    - name: Login to GHCR
-      env:
-        GITHUB_USER: ${{ github.actor }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        echo "$GITHUB_TOKEN" | docker login ghcr.io -u $GITHUB_USER --password-stdin
     - name: build docker
       run: ci/build-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/build-docker.sh
-    - name: push docker
+    - name: Login and Push
       env:
-        GITHUB_USER: ${{ github.actor }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: ci/push-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/push-docker.sh
+        CR_PAT: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo $CR_PAT | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+        ci/push-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/push-docker.sh
   Component-test:
     runs-on: ubuntu-latest
     needs: Docker-image
@@ -109,4 +104,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: |
-          ~/.gradle/ca
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+    - name: Execute component test
+      run: ci/component-test.sh && GIT_COMMIT="GA-$GITHUB_SHA"
