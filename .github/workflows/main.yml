@@ -122,7 +122,4 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
     - name: Execute component test
-      env:
-        GITHUB_USER: ${{ github.actor }}
-
       run: ci/component-test.sh && GIT_COMMIT="GA-$GITHUB_SHA"
