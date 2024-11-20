@@ -82,7 +82,7 @@ jobs:
       with:
         name: code
     - name: Login to Docker
-      run: echo "${{ env.docker_password }}" | docker login -u ${{ env.docker_username }} --password-stdin
+      run: echo "${{ env.docker_password }}" | docker login ghcr.io -u ${{ env.docker_username }} --password-stdin
     - name: build docker
       run: ci/build-docker.sh && export GIT_COMMIT="GA-$GITHUB_SHA" && ci/build-docker.sh
     - name: push docker
